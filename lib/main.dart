@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:webfeed/domain/rss_feed.dart';
 import 'article.dart';
@@ -35,7 +37,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Article> articles = [];
   bool isLoading = false;
-
+  var _title = "";
+  var _description = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,11 +56,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     itemCount: articles.length,
                     itemBuilder: (BuildContext context, int index) {
                       final article = articles[index];
+
+                      _title = utf8.decode(article.title!.codeUnits);
+
+                      _description =
+                          utf8.decode((article.description!.codeUnits));
+
                       return Card(
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         child: ListTile(
                             title: Text(
-                              article.title ?? "No Title",
+                              _title,
                               style: const TextStyle(
                                 color:
                                     Colors.blue, // Set the title color to blue
@@ -70,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Image(
                                     image: NetworkImage(article.enclosure ??
                                         "https://via.placeholder.com/150")),
-                                Text(article.description ?? "No Description"),
+                                Text(_description),
                                 Text(
                                     "Published on: ${article.pubDate?.toIso8601String() ?? "No Date"}"),
                               ],
